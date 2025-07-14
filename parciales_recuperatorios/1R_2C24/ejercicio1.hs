@@ -11,15 +11,20 @@ falla = foldOperador
             (\n   -> n == 0)
             (or)
 
+-- REVISAR: intentar hacer la función de fSec de falla con una lambda, no me termina de cerrar por qué el or así solito funca
+-- se puede hacer recursión con una función lambda????
+
 aplanar :: Operador -> Operador
 aplanar = foldOperador 
-            (\n -> Suma n)
-            (\n -> DividirPor n)
+            (\n   -> Suma n)
+            (\n   -> DividirPor n)
             (\ops -> Secuencia (concatMap f ops))
         where
             f x = case x of
                     Secuencia ops -> ops
-                    op -> [op]
+                    op            -> [op]
+
+-- REVISAR: darle un nombre a f más declarativo
 
 aplanar2 :: Operador -> Operador
 aplanar2 = foldOperador Suma DividirPor (Secuencia . concatMap (\x -> case x of
