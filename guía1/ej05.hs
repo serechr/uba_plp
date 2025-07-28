@@ -10,7 +10,7 @@ elementosEnPosicionesPares (x:xs) = if null xs
 
 {- 
     No es recursión estructural ya que está modificando la lista sobre la que hace recursión, 
-    no hace recursión sobre la cola de la lista que toma. (medio dudosa la explicación, ver mejor lo de abajo)
+    no hace recursión sobre la cola de la lista que toma. (medio dudosa la explicación, ver mejor lo de abajo).
     
     Respuesta del apunte "Recursion estructural, primitiva y global" de la sección Útil
     La recursión de elementosEnPosicionesPares es global, ya que accede a un resultado anterior: 
@@ -25,7 +25,7 @@ entrelazar (x:xs) = \ys -> if null ys
 
 {-
     Sí es recursion estructural ya que el llamado recursivo de la función siempre se hace sobre la cola de la lista 
-    y en ningúm momento se accede a la subestructura de la lista
+    y en ningún momento se accede a la subestructura de la lista.
 -}
 
 entrelazarFoldr :: [a] -> [a] -> [a]
