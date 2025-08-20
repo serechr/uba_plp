@@ -1,3 +1,3 @@
-# PLP_1C25
+# Paradigmas de Programación
 
 Los errores son muy probables!!!
