@@ -24,6 +24,10 @@ max2 (x, y) | x >= y = x
 max2' :: Float -> (Float -> Float) -- los paréntesis los podemos sacar pero es para que se vea mejor la idea de currificación
 max2' x y = if (x >= y) then x else y
 
+maximoEntreCuatro :: Float -> Float
+maximoEntreCuatro = max2' 4
+
+maximoEntreCuatro' = \y -> max2 (4, y)
 ----
 
 normaVectorial :: (Float, Float) -> Float
