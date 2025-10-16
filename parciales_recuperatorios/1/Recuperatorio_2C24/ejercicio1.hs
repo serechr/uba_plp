@@ -12,7 +12,6 @@ falla = foldOperador
             (or)
 
 -- REVISAR: intentar hacer la función de fSec de falla con una lambda, no me termina de cerrar por qué el or así solito funca
--- se puede hacer recursión con una función lambda????
 
 aplanar :: Operador -> Operador
 aplanar = foldOperador 
