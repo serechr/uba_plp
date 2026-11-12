@@ -1,0 +1,65 @@
+-- Árboles ternarios
+data AT a = Nil | Tern a (AT a) (AT a) (AT a) deriving Eq
+--E.g., at = Tern 1 (Tern 2 Nil Nil Nil) (Tern 3 Nil Nil Nil) (Tern 4 Nil Nil Nil)
+--Es es árbol ternario con 1 en la raíz, y con sus tres hijos 2, 3 y 4.
+
+-- RoseTrees
+data RoseTree a = Rose a [RoseTree a] deriving Eq
+--E.g., rt = Rose 1 [Rose 2 [], Rose 3 [], Rose 4 [], Rose 5 []] 
+--es el RoseTree con 1 en la raíz y 4 hijos (2, 3, 4 y 5)
+
+-- Tries
+data Trie a = TrieNodo (Maybe a) [(Char, Trie a)] deriving Eq
+-- E.g., t = TrieNodo (Just True) [('a', TrieNodo (Just True) []), ('b', TrieNodo Nothing [('a', TrieNodo (Just True) [('d', TrieNodo Nothing [])])]), ('c', TrieNodo (Just True) [])]
+-- es el Trie Bool de que tiene True en la raíz, tres hijos (a, b, y c), y, a su vez, b tiene como hijo a d.
+
+foldAT :: b -> (a -> b -> b -> b -> b) -> AT a -> b
+foldAT cNil fTern arb = case arb of
+                            Nil                  -> cNil
+                            (Tern x izq med der) -> fTern x (rec izq) (rec med) (rec der)
+        where rec = foldAT cNil fTern
+
+-- foldAT [] (\x izq med der -> if even x then x : izq ++ med ++ der else izq ++ med ++ der) at1 
+
+foldRose :: (a -> [b] -> b) -> RoseTree a -> b
+foldRose f (Rose a rs) = f a (map (foldRose f) rs)
+
+-- foldRose (\x xs -> (x + 1) : concat xs) rt2 
+
+-- foldRose (\x xs -> if length x == 4 then x : concat xs else concat xs) rt3
+
+foldTrie :: (Maybe a -> [(Char, b)] -> b) -> Trie a -> b
+foldTrie f (TrieNodo x ts) = f x (map (\tup -> (fst tup, rec (snd tup))) ts)
+        where rec = foldTrie f
+
+-- foldTrie (\_ ts -> concatMap (\(c, res) -> if elem c ['a','e','i','o','u'] then c : res else res) ts) trie3
+
+
+------------
+
+preorder :: Procesador (AT a) a
+preorder = foldAT [] (\x reci recm recd -> [x] ++ reci ++ recm ++ recd)
+
+inorder :: Procesador (AT a) a
+inorder = foldAT [] (\x reci recm recd -> reci ++ recm ++ [x] ++ recd)
+
+postorder :: Procesador (AT a) a
+postorder = foldAT [] (\x reci recm recd -> reci ++ recm ++ recd ++ [x])
+
+---------------------
+
+preorderRose :: Procesador (RoseTree a) a
+preorderRose = foldRose (\x rec -> x : concat rec)
+
+hojasRose :: Procesador (RoseTree a) a
+hojasRose = foldRose (\x rec -> if null rec then [x] else concat rec)
+
+ramasRose :: Procesador (RoseTree a) [a]
+ramasRose = foldRose (\x rec -> if null rec then [[x]] else map (x:) (concat rec))
+
+----------------
+
+recr :: (a -> [a] -> b -> b) -> b -> [a] -> b
+recr _ z [] = z
+recr f z (x : xs) = f x xs (recr f z xs)
+
